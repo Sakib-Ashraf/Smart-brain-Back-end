@@ -4,7 +4,7 @@
   "description": "back-end for smart-brain",
   "main": "Back-end",
   "scripts": {
-    "start": "server.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "Sakib-Ashraf",
