@@ -12,6 +12,9 @@
   "devDependencies": {
     "nodemon": "^2.0.12"
   },
+  "engines": {
+    "node": "14.17.0"
+  },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
     "clarifai": "^2.9.1",
