@@ -8,13 +8,15 @@ const image = require('./controller/image');
 const knex = require('knex');
     
 const db = knex({
-    client: 'pg',
-    connection: {
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    }
+	client: 'pg',
+	connection: () => {
+		return {
+			host: '127.0.0.1', //localhost
+			user: 'postgres', //add your user name for the database here
+			password: 'postgreSQL', //add your correct password in here
+			database: 'smartbraindb', //add your database name you created here
+		};
+	},
 });
 
 const app = express();
@@ -42,6 +44,10 @@ app.get('/profile/:id', (req, res) => {
     profile.handleProfile(req, res, db);
 });
 
+app.post('/profile-update/:id', (req, res) => {
+    profile.handleProfileUpdate(req, res, db);
+});
+
 app.put('/image', (req, res) => {
     image.handleImage(req, res, db);
 });
@@ -49,7 +55,7 @@ app.post('/imageurl', (req, res) => {
     image.handleApi(req, res);
 });
 
-
-app.listen(process.env.PORT || 3300, () => {
-    console.log(`app is running successfully on port ${process.env.PORT}`);
+const PORT = process.env.PORT || 3300;
+app.listen(PORT, () => {
+	console.log(`app is running successfully on port 3300`);
 });

@@ -17,6 +17,32 @@ const handleProfile = (req, res, db) => {
         });
 };
 
+const handleProfileUpdate = (req, res, db) => {
+    const {
+        id
+    } = req.params;
+
+    const {
+        name, age, pet
+    } = req.body;
+
+    db('users').where({
+        id
+    }).update({ name, age, pet })
+        .then(resp => {
+            if (resp) {
+                res.json({ message: 'success' });
+            } else {
+                res.status(400).json('Unable to Update');
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(404).json('error updating user');
+        });
+};
+
 module.exports = {
-    handleProfile
+    handleProfile,
+    handleProfileUpdate,
 };
