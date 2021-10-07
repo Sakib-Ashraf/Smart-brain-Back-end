@@ -13,6 +13,7 @@ const handleProfile = (req, res, db) => {
             }
         })
         .catch(err => {
+            console.log(err);
             res.status(404).json('Error getting user');
         });
 };
@@ -31,7 +32,7 @@ const handleProfileUpdate = (req, res, db) => {
     }).update({ name, age, pet })
         .then(resp => {
             if (resp) {
-                res.json({ message: 'success' });
+                res.status(200).json('success');
             } else {
                 res.status(400).json('Unable to Update');
             }

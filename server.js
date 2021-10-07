@@ -5,16 +5,18 @@ const register = require('./controller/register');
 const SignIn = require('./controller/signIn');
 const profile = require('./controller/profile');
 const image = require('./controller/image');
+const auth = require('./middleware/authorization');
 const knex = require('knex');
+require('dotenv').config();
     
 const db = knex({
 	client: 'pg',
 	connection: () => {
 		return {
-			host: '127.0.0.1', //localhost
-			user: 'postgres', //add your user name for the database here
-			password: 'postgreSQL', //add your correct password in here
-			database: 'smartbraindb', //add your database name you created here
+			host: process.env.DB_HOST, //localhost
+			user: process.env.DB_USER, //add your user name for the database here
+			password: process.env.DB_PASSWORD, //add your correct password in here
+			database: process.env.DB_NAME, //add your database name you created here
 		};
 	},
 });
@@ -32,26 +34,26 @@ app.get('/', (req, res) => {
     res.send('Success');
 });
 
-app.post('/signin', (req, res) => {
-    SignIn.handleSignIn(req, res, db, bcrypt);
-});
+app.post('/signin', 
+    SignIn.signInAuthentication( db, bcrypt)
+);
 
 app.post('/register', (req, res) => {
     register.handleRegister(req, res, db, bcrypt);
 });
 
-app.get('/profile/:id', (req, res) => {
+app.get('/profile/:id', auth.requireAuth, (req, res) => {
     profile.handleProfile(req, res, db);
 });
 
-app.post('/profile-update/:id', (req, res) => {
+app.post('/profile-update/:id', auth.requireAuth, (req, res) => {
     profile.handleProfileUpdate(req, res, db);
 });
 
-app.put('/image', (req, res) => {
+app.put('/image', auth.requireAuth, (req, res) => {
     image.handleImage(req, res, db);
 });
-app.post('/imageurl', (req, res) => {
+app.post('/imageurl', auth.requireAuth, (req, res) => {
     image.handleApi(req, res);
 });
 
