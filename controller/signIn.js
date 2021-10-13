@@ -7,6 +7,7 @@ const redisClient = redis.createClient({
     'host': process.env.DB_HOST
 });
 
+
 const handleSignIn = (req, res, db, bcrypt) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -34,6 +35,7 @@ const handleSignIn = (req, res, db, bcrypt) => {
         });
 };
 
+
 const getAuthTokenId = (req, res) => {
     const { authorization } = req.headers;
     return redisClient.get(authorization, (err, data) => {
@@ -43,6 +45,7 @@ const getAuthTokenId = (req, res) => {
         return res.status(200).json({ id: data });
     });
 };
+
 
 const signToken = (email) => {
     const jwtPayload = { email };

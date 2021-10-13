@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const register = require('./controller/register');
 const SignIn = require('./controller/signIn');
+const SignOut = require('./controller/signOut');
 const profile = require('./controller/profile');
 const image = require('./controller/image');
 const auth = require('./middleware/authorization');
@@ -37,6 +38,10 @@ app.get('/', (req, res) => {
 app.post('/signin', 
     SignIn.signInAuthentication( db, bcrypt)
 );
+
+app.post('/signout', (req, res) => {
+	SignOut.handleSignOut(req, res);
+});
 
 app.post('/register', (req, res) => {
     register.handleRegister(req, res, db, bcrypt);
