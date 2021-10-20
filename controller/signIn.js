@@ -5,6 +5,10 @@ const redis = require('redis');
 
 const redisClient = redis.createClient(process.env.REDISCLOUD_URL);
 
+//for localhost
+//const redisClient = redis.createClient({
+//host: process.env.DB_HOST
+//});
 
 const handleSignIn = (req, res, db, bcrypt) => {
     const { email, password } = req.body;
