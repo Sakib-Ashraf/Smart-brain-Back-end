@@ -13,6 +13,7 @@ const handleSignIn = (req, res, db, bcrypt) => {
     if (!email || !password) {
         return Promise.reject({message : 'incorrect form submission'});
     }
+    
     return db.select('email', 'hash').from('login')
         .where('email', '=', email)
         .then(data => {
