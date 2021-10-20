@@ -12,13 +12,9 @@ require('dotenv').config();
     
 const db = knex({
 	client: 'pg',
-	connection: () => {
-		return {
-			host: process.env.DB_HOST, //localhost
-			user: process.env.DB_USER, //add your user name for the database here
-			password: process.env.DB_PASSWORD, //add your correct password in here
-			database: process.env.DB_NAME, //add your database name you created here
-		};
+	connection: {
+		connectionString: process.env.DATABASE_URL,
+		ssl: true,
 	},
 });
 
