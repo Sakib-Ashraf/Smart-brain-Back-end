@@ -3,9 +3,7 @@ const redis = require('redis');
 
 //Setup Redis Client
 
-const redisClient = redis.createClient({
-	host: process.env.REDIS_ENDPOINT_URI,
-});
+const redisClient = redis.createClient(process.env.REDISCLOUD_URL);
 
 
 const handleSignIn = (req, res, db, bcrypt) => {
