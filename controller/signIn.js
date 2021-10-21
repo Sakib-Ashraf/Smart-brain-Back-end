@@ -11,7 +11,9 @@ const redisClient = redis.createClient(process.env.REDIS_URL);
 //});
 
 const handleSignIn = (req, res, db, bcrypt) => {
+
     const { email, password } = req.body;
+
     if (!email || !password) {
         return Promise.reject({message : 'incorrect form submission'});
     }
@@ -40,7 +42,9 @@ const handleSignIn = (req, res, db, bcrypt) => {
 
 
 const getAuthTokenId = (req, res) => {
+
     const { authorization } = req.headers;
+
     return redisClient.get(authorization, (err, data) => {
         if (err || !data) {
             res.status(400).json({ message: 'Unauthorized' });
@@ -51,7 +55,9 @@ const getAuthTokenId = (req, res) => {
 
 
 const signToken = (email) => {
+
     const jwtPayload = { email };
+
     return jwt.sign(jwtPayload, process.env.JWT_SECRET, {
         expiresIn: '2 days'
     });
@@ -63,8 +69,11 @@ const setToken = (token, id) => {
 };
 
 const createSession = (data) => {
+
     const { id, email } = data;
+
     const token = signToken(email);
+
     return setToken(token, id)
         .then(() => {
             return {
@@ -79,7 +88,9 @@ const createSession = (data) => {
 
 
 const signInAuthentication = (db, bcrypt) => (req, res) => {
+
     const { authorization } = req.headers;
+    
     return authorization ?
         getAuthTokenId(req, res) :
         handleSignIn(req, res, db, bcrypt)
