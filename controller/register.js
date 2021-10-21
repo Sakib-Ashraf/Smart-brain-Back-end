@@ -45,7 +45,7 @@ const handleRegister = (req, res, db, bcrypt) => {
         });
 };
 
-const signUpAuthentication = ( req, res, db, bcrypt) => {
+const signUpAuthentication = (db, bcrypt) => (req, res) => {
 	const { authorization } = req.headers;
 
     return authorization ?

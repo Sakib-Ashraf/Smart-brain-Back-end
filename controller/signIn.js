@@ -87,7 +87,7 @@ const createSession = (data) => {
 };
 
 
-const signInAuthentication = (db, bcrypt, req, res) => {
+const signInAuthentication = (db, bcrypt) => (req, res) => {
 
     const { authorization } = req.headers;
     

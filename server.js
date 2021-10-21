@@ -44,17 +44,17 @@ app.get('/', (req, res) => {
     res.send('Success');
 });
 
-app.post('/signin', (req, res) => {
-    SignIn.signInAuthentication(req, res, db, bcrypt);
-});
+app.post('/signin', 
+    SignIn.signInAuthentication( db, bcrypt)
+);
 
 app.post('/signout', (req, res) => {
 	SignOut.handleSignOut(req, res);
 });
 
-app.post('/register', (req, res) => {
-    register.signUpAuthentication(req, res, db, bcrypt);
-});
+app.post('/register',
+    register.signUpAuthentication(db, bcrypt)
+);
 
 app.get('/profile/:id', auth.requireAuth, (req, res) => {
     profile.handleProfile(req, res, db);
