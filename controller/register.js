@@ -1,13 +1,19 @@
+const getAuthTokenId = require('./signIn').getAuthTokenId;
+const createSession = require('./signIn').createSession;
+
 const handleRegister = (req, res, db, bcrypt) => {
+
     const { name, email, password, age, pet } = req.body;
+
     console.log(req.body);
+
     if (!name || !email || !password) {
-        return res.status(400).json('incorrect form submission');
+        return Promise.reject({ message: 'incorrect form submission' });
     }
 
     const hash = bcrypt.hashSync(password);
 
-    db.transaction(trx => {
+    return db.transaction(trx => {
         trx.insert({
             hash: hash,
             email: email
@@ -24,23 +30,39 @@ const handleRegister = (req, res, db, bcrypt) => {
                         pet: pet,
                         joined: new Date(),
                     })
-                    .then(user => {
-                        res.json(user[0]);
-                    })
+                    .then(user => user[0])
                     .then(trx.commit)
                     .catch(trx.rollback);
             })
             .catch(err => {
                 console.log(err);
-                res.status(400).json('Wrong info or already registered');
+                 Promise.reject({ message: 'Unable to Signup' });
             });
     })
         .catch(err => {
             console.log(err);
-            res.status(400).json('Unable to register');
+            Promise.reject({ message: 'wrong credentials' });
         });
 };
 
+const signUpAuthentication = ( req, res, db, bcrypt) => {
+	const { authorization } = req.headers;
+
+    return authorization ?
+        getAuthTokenId(req, res) :
+        handleRegister(req, res, db, bcrypt)
+				.then((data) => {
+                    return data.id && data.email ?
+                        createSession(data) :
+                        Promise.reject(data);
+				})
+				.then((session) => res.json(session))
+				.catch((err) => {
+					console.log(err);
+					res.status(400).json({ message: 'something is wrong' });
+				});
+};
+
 module.exports = {
-    handleRegister
+	signUpAuthentication,
 };
